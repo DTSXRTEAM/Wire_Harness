@@ -12,6 +12,7 @@ public class Projects
 [System.Serializable]
 public class Project
 {
+    public string ProjectName;
     public Harness[] Harness;
 }
 
