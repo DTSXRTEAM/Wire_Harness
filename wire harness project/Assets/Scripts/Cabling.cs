@@ -26,6 +26,7 @@ public class Harness
 [System.Serializable]
 public class Cable
 {
+    public string CableName;
     public string Node;
 }
 
