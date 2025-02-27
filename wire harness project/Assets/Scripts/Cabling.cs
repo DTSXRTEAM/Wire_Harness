@@ -19,6 +19,7 @@ public class Project
 [System.Serializable]
 public class Harness
 {
+    public string HarnessName;
     public Cable[] Cable;
 }
 

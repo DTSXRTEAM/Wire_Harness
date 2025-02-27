@@ -7,7 +7,7 @@ public class list : MonoBehaviour
 {
 
         public GameObject projectPrefab; // Prefab to instantiate
-        public Transform contentParent;  // Parent where prefab will be instantiated
+        public Transform projectParent;  // Parent where prefab will be instantiated
         public Cabling cablingScript;    // Reference to the Cabling script
 
         void Start()
@@ -17,7 +17,7 @@ public class list : MonoBehaviour
 
         void SpawnProjects()
         {
-            if (projectPrefab == null || contentParent == null || cablingScript == null)
+            if (projectPrefab == null || projectParent == null || cablingScript == null)
             {
                 Debug.LogError("Missing references! Assign Project Prefab, Content Parent, and Cabling Script.");
                 return;
@@ -31,7 +31,7 @@ public class list : MonoBehaviour
                 string projectName = cablingScript.Projects.Project[i].ProjectName;
 
                 // Instantiate the prefab inside Content Parent
-                GameObject newProject = Instantiate(projectPrefab, contentParent);
+                GameObject newProject = Instantiate(projectPrefab, projectParent);
                 newProject.name = projectName;  // Assign unique name to GameObject
 
                 // Find and update the Text inside the prefab
@@ -41,7 +41,7 @@ public class list : MonoBehaviour
                     tmpText.text = projectName;  // Update TMP Text
                 }
 
-                //
+                
 
                 Debug.Log("Spawned Project: " + projectName);
             }
