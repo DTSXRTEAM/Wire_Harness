@@ -4,16 +4,28 @@ using TMPro;
 
 public class SearchFieldHandler : MonoBehaviour
 {
-    public TMP_InputField searchInput;
-    public Image searchIcon;
+    [System.Serializable]
+    public class SearchPanel
+    {
+        public TMP_InputField searchInputField; // Input field
+        public GameObject searchIcon;           // Search icon
+    }
+
+    public SearchPanel[] searchPanels; // Array for multiple panels
 
     void Start()
     {
-        searchInput.onValueChanged.AddListener(OnSearchTextChanged);
+        foreach (var panel in searchPanels)
+        {
+            if (panel.searchInputField != null && panel.searchIcon != null)
+            {
+                panel.searchInputField.onValueChanged.AddListener((text) => OnSearchTextChanged(panel, text));
+            }
+        }
     }
 
-    void OnSearchTextChanged(string text)
+    void OnSearchTextChanged(SearchPanel panel, string text)
     {
-        searchIcon.enabled = string.IsNullOrEmpty(text); // Disable image when typing
+        panel.searchIcon.SetActive(string.IsNullOrEmpty(text));
     }
 }
