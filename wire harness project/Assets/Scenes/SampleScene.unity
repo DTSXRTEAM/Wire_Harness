@@ -518,6 +518,12 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 316372771}
   m_PrefabAsset: {fileID: 0}
+--- !u!224 &316372773 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 404849575161773110, guid: 003055950f639164dae3eb2ca4cad34d,
+    type: 3}
+  m_PrefabInstance: {fileID: 316372771}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -744,6 +750,7 @@ GameObject:
   m_Component:
   - component: {fileID: 849394092}
   - component: {fileID: 849394091}
+  - component: {fileID: 849394093}
   m_Layer: 0
   m_Name: Cable list
   m_TagString: Untagged
@@ -765,18 +772,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Projects:
     Project:
-    - ProjectName: project 1
-      Harness:
-      - Cable:
-        - Node: node 1
-        - Node: node 2
-        - Node: node 3
-        - Node: node 4
-      - Cable:
-        - Node: node 1
-        - Node: node 2
-        - Node: node 3
-        - Node: node 4
+    - ProjectName: a
+      Harness: []
+    - ProjectName: b
+      Harness: []
+    - ProjectName: c
+      Harness: []
+    - ProjectName: d
+      Harness: []
+    - ProjectName: e
+      Harness: []
+    - ProjectName: f
+      Harness: []
+    - ProjectName: g
+      Harness: []
+    - ProjectName: h
+      Harness: []
+    - ProjectName: j
+      Harness: []
 --- !u!4 &849394092
 Transform:
   m_ObjectHideFlags: 0
@@ -792,6 +805,22 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &849394093
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 849394090}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6edc57c4520e5d429a9c7b184fb05ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  projectPrefab: {fileID: 955964574903376201, guid: 3d8f9150c494b5a498d7a083352d71a8,
+    type: 3}
+  contentParent: {fileID: 316372773}
+  cablingScript: {fileID: 849394091}
 --- !u!1001 &1015643914053916000
 PrefabInstance:
   m_ObjectHideFlags: 0

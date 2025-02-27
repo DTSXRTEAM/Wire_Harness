@@ -35,7 +35,7 @@ public class Cabling : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        int totalNodes = 0;
+        /*int totalNodes = 0;
 
         for (int i = 1; i < Projects.Project.Length; i++)
         {
@@ -49,7 +49,7 @@ public class Cabling : MonoBehaviour
             }
             //Debug.Log(Projects.Project[i].Harness[1].Cable[1].Node);
         }
-        Debug.Log("Total number of nodes: " + totalNodes);
+        Debug.Log("Total number of nodes: " + totalNodes);*/
     }
 
     // Update is called once per frame
