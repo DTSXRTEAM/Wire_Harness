@@ -27,9 +27,14 @@ public class Harness
 public class Cable
 {
     public string CableName;
-    public string Node;
+    public Node[] Node;
 }
 
+[System.Serializable]
+public class Node
+{
+    public string NodeName;
+}
 public class Cabling : MonoBehaviour
 {
     public Projects Projects = new Projects();
