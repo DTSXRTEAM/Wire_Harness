@@ -67,25 +67,22 @@ public class List : MonoBehaviour
 
             // Assign button click dynamically
             Button projectButton = newProject.GetComponent<Button>();
+
+
             if (projectButton != null)
             {
-                int index = i; // Capture index for delegate
-                projectButton.onClick.AddListener(() => SpawnHarness());
+                int currentindex = i;
+                projectButton.onClick.AddListener(() => UpdateCurrentProject(currentindex));
             }
 
-            else
-            {
-                projectButton.onClick.AddListener(() => SpawnProjects());
-            }
-
-            Debug.Log("Spawned Project: " + projectName);
         }
     }
 
-    private void UpdateCurrentProject(int x)
+    public void UpdateCurrentProject(int x)
     {
         currentProject = x;
         SpawnHarness();
+       
     }
     public void SpawnHarness()
     {
@@ -129,12 +126,7 @@ public class List : MonoBehaviour
             if (HarnessButton != null)
             {
                 int index = i; // Capture index for delegate
-                HarnessButton.onClick.AddListener(() => SpawnCable());
-            }
-
-            else
-            {
-                HarnessButton.onClick.AddListener(() => SpawnHarness());
+                HarnessButton.onClick.AddListener(() => UpdateCurrentHarness(index));
             }
         }
     }
@@ -188,12 +180,7 @@ public class List : MonoBehaviour
             if (CableButton != null)
             {
                 int index = i; // Capture index for delegate
-                CableButton.onClick.AddListener(() => SpawnCablProperties());
-            }
-
-            else
-            {
-                CableButton.onClick.AddListener(() => SpawnCable());
+                CableButton.onClick.AddListener(() => UpdateCurrentCable(index));
             }
 
         }
