@@ -3010,7 +3010,7 @@ PrefabInstance:
     - target: {fileID: 3681547214217737393, guid: 860e7905251b90247bf3d9ea4abe71ff,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4305419859812826391, guid: 860e7905251b90247bf3d9ea4abe71ff,
         type: 3}
@@ -3085,12 +3085,12 @@ PrefabInstance:
     - target: {fileID: 7944795075020419132, guid: 860e7905251b90247bf3d9ea4abe71ff,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7944795075020419132, guid: 860e7905251b90247bf3d9ea4abe71ff,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8323089931362222849, guid: 860e7905251b90247bf3d9ea4abe71ff,
         type: 3}
