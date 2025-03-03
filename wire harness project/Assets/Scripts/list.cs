@@ -99,6 +99,26 @@ public class List : MonoBehaviour
         SpawnCable();
     }
 
+    public void DeleteLastProject()
+    {
+        if (cablingScript.Projects.Project == null || cablingScript.Projects.Project.Length == 0)
+        {
+            Debug.LogWarning("No projects to delete.");
+            return;
+        }
+
+        // Convert array to a list for easy removal
+        List<Project> projectList = new List<Project>(cablingScript.Projects.Project);
+
+        // Remove the last project
+        projectList.RemoveAt(projectList.Count - 1);
+
+        // Convert back to an array
+        cablingScript.Projects.Project = projectList.ToArray();
+
+        // Update UI
+        SpawnProjects();
+    }
 
 
     public void SpawnProjects()
