@@ -10,7 +10,7 @@ public class SphereSpawner : MonoBehaviour
     {
         for (int i = 0; i < sphereCount; i++)
         {
-            Vector3 randomPosition = new Vector3(i * 3, Random.Range(0, 5), Random.Range(-5, 5));
+            Vector3 randomPosition = new Vector3(i * 0.1f, Random.Range(0, 2), Random.Range(-2, 2));
             GameObject newSphere = Instantiate(spherePrefab, randomPosition, Quaternion.identity);
             splineUpdater.AddSphere(newSphere.transform);
         }
