@@ -4957,7 +4957,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1beaa836c03bb141b9568275de1b020, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spherePrefab: {fileID: 4918717423868889547, guid: 186f2eb8b5e15a941abab2674aac24e1,
+  spherePrefab: {fileID: 6206768311186516343, guid: 186f2eb8b5e15a941abab2674aac24e1,
     type: 3}
   splineUpdater: {fileID: 982690731}
   sphereCount: 5
