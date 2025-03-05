@@ -458,7 +458,7 @@ MonoBehaviour:
   m_RebuildFrequency: 30
   m_UpdateColliders: 1
   m_Sides: 8
-  m_SegmentsPerUnit: 4
+  m_SegmentsPerUnit: 200
   m_Capped: 0
   m_Radius: 0.01
   m_Range: {x: 0, y: 1}
