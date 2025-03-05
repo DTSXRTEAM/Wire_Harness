@@ -8,8 +8,6 @@ public class List : MonoBehaviour
     public int currentProject;
     public int currentHarness;
     public int currentCable;
-    
-
 
     public GameObject ScrollProject; // Project list UI
     public GameObject ScrollHarness; // Harness list UI
@@ -99,8 +97,10 @@ public class List : MonoBehaviour
         SpawnCable();
     }
 
-    public void DeleteLastProject()
+    public void DeleteLastProject(int X)
     {
+        Debug.Log("delete project " + X);
+
         if (cablingScript.Projects.Project == null || cablingScript.Projects.Project.Length == 0)
         {
             Debug.LogWarning("No projects to delete.");
@@ -111,7 +111,7 @@ public class List : MonoBehaviour
         List<Project> projectList = new List<Project>(cablingScript.Projects.Project);
 
         // Remove the last project
-        projectList.RemoveAt(projectList.Count - 1);
+        projectList.RemoveAt(X);
 
         // Convert back to an array
         cablingScript.Projects.Project = projectList.ToArray();
@@ -119,7 +119,6 @@ public class List : MonoBehaviour
         // Update UI
         SpawnProjects();
     }
-
 
     public void SpawnProjects()
     {
@@ -168,6 +167,19 @@ public class List : MonoBehaviour
                 projectButton.onClick.AddListener(() => UpdateCurrentProject(currentindex));
             }
 
+            Transform Deletbutton = projectButton.gameObject.transform.Find("Button");
+
+            //GameObject Deletbutton = GameObject.Find("Button");
+
+            Button deleteButton = Deletbutton.gameObject.GetComponent<Button>();
+
+            if (deleteButton != null)
+            {
+                int currentindex = i;
+                //Debug.Log("project" + projectName);
+                deleteButton.onClick.AddListener(() => DeleteLastProject(currentindex));
+            }
+
         }
     }
 
@@ -177,8 +189,6 @@ public class List : MonoBehaviour
         SpawnHarness();
        
     }
-
-   
 
     public void SpawnHarness()
     {
@@ -226,7 +236,6 @@ public class List : MonoBehaviour
             }
         }
     }
-
 
     private void UpdateCurrentHarness(int x)
     {
@@ -282,10 +291,6 @@ public class List : MonoBehaviour
         }
     }
 
-      
-    
-
-
     private void UpdateCurrentCable(int x)
     {
         currentCable = x;
@@ -332,6 +337,5 @@ public class List : MonoBehaviour
 
 
         }
-
     }
 }
