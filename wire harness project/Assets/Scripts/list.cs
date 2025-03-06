@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,23 +10,24 @@ public class List : MonoBehaviour
     public int currentHarness;
     public int currentCable;
 
-    public GameObject ScrollProject; // Project list UI
-    public GameObject ScrollHarness; // Harness list UI
+    public GameObject ScrollProject;
+    public GameObject ScrollHarness;
     public GameObject ScrollCable;
     public GameObject cableProperties;
-    public GameObject ProjectCard; // Prefab for projects and harnesses
+    public GameObject ProjectCard;
     public GameObject CablePropertiescard;
-    public Transform ProjectCardParent; // Parent for projects
-    public Transform HarnessCardParent; // Parent for harnesses
-    public Transform CableCardParent; // Parent for harnesses
+    public Transform ProjectCardParent;
+    public Transform HarnessCardParent;
+    public Transform CableCardParent;
     public Transform cablePropertiesParent;
-    //public Button BackButton; // Back button
-    public Cabling cablingScript; // Reference to the Cabling script
+
+    public Cabling cablingScript;
+   
+
 
     void Start()
     {
-        SpawnProjects(); // Automatically run on Start
-                         // BackButton.onClick.AddListener(SpawnProjects); // Assign the back button function
+        SpawnProjects();
     }
 
     public void AddNewProject()
@@ -54,26 +56,23 @@ public class List : MonoBehaviour
     {
         if (cablingScript.Projects.Project == null || cablingScript.Projects.Project.Length == 0) return;
 
-        // Get the selected project
         Project selectedProject = cablingScript.Projects.Project[currentProject];
 
-        // Ensure the Harness array is initialized
         if (selectedProject.Harness == null)
         {
             selectedProject.Harness = new Harness[0];
         }
 
-        // Create a new harness
-        Harness newHarness = new Harness();
-        newHarness.HarnessName = "New Harness " + (selectedProject.Harness.Length + 1);
-        newHarness.Cable = new Cable[0]; // Initialize cable array
+        Harness newHarness = new Harness
+        {
+            HarnessName = "New Harness " + (selectedProject.Harness.Length + 1),
+            Cable = new Cable[0]
+        };
 
-        // Add new harness to the project
         List<Harness> harnessList = new List<Harness>(selectedProject.Harness);
         harnessList.Add(newHarness);
         selectedProject.Harness = harnessList.ToArray();
 
-        // Update UI
         SpawnHarness();
     }
 
@@ -81,19 +80,17 @@ public class List : MonoBehaviour
     {
         if (cablingScript.Projects.Project.Length == 0) return;
 
-        // Get current harness
         Harness selectedHarness = cablingScript.Projects.Project[currentProject].Harness[currentHarness];
 
-        // Create a new cable
-        Cable newCable = new Cable();
-        newCable.CableName = "New Cable " + (selectedHarness.Cable.Length + 1);
+        Cable newCable = new Cable
+        {
+            CableName = "New Cable " + (selectedHarness.Cable.Length + 1)
+        };
 
-        // Add new cable to the harness
         List<Cable> cableList = new List<Cable>(selectedHarness.Cable);
         cableList.Add(newCable);
         selectedHarness.Cable = cableList.ToArray();
 
-        // Update UI
         SpawnCable();
     }
 
@@ -118,6 +115,27 @@ public class List : MonoBehaviour
 
         // Update UI
         SpawnProjects();
+    }
+    public void DeleteLastHarness(int X)
+    {
+        if (cablingScript.Projects.Project[currentProject].Harness.Length == 0) return;
+
+        List<Harness> harnessList = new List<Harness>(cablingScript.Projects.Project[currentProject].Harness);
+        harnessList.RemoveAt(X);
+        cablingScript.Projects.Project[currentProject].Harness = harnessList.ToArray();
+
+        SpawnHarness();
+    }
+
+    public void DeleteLastCable(int X)
+    {
+        if (cablingScript.Projects.Project[currentProject].Harness[currentHarness].Cable.Length == 0) return;
+
+        List<Cable> cableList = new List<Cable>(cablingScript.Projects.Project[currentProject].Harness[currentHarness].Cable);
+        cableList.RemoveAt(X);
+        cablingScript.Projects.Project[currentProject].Harness[currentHarness].Cable = cableList.ToArray();
+
+        SpawnCable();
     }
 
     public void SpawnProjects()
@@ -163,7 +181,7 @@ public class List : MonoBehaviour
             if (projectButton != null)
             {
                 int currentindex = i;
-                Debug.Log("project"  + projectName);
+                Debug.Log("project" + projectName);
                 projectButton.onClick.AddListener(() => UpdateCurrentProject(currentindex));
             }
 
@@ -183,28 +201,21 @@ public class List : MonoBehaviour
         }
     }
 
+
+
     public void UpdateCurrentProject(int x)
     {
         currentProject = x;
         SpawnHarness();
-       
     }
 
     public void SpawnHarness()
     {
-
         ScrollProject.SetActive(false);
         ScrollHarness.SetActive(true);
         ScrollCable.SetActive(false);
         cableProperties.SetActive(false);
 
-        if (ProjectCard == null || HarnessCardParent == null || cablingScript == null)
-        {
-            Debug.LogError("Missing references! Assign Project Prefab, Content Parent, and Cabling Script.");
-            return;
-        }
-
-        // Clear previous harnesses to avoid duplication
         foreach (Transform child in HarnessCardParent)
         {
             Destroy(child.gameObject);
@@ -215,24 +226,24 @@ public class List : MonoBehaviour
         for (int i = 0; i < harnessCount; i++)
         {
             string harnessName = cablingScript.Projects.Project[currentProject].Harness[i].HarnessName;
-
-            // Instantiate harness UI
             GameObject newHarness = Instantiate(ProjectCard, HarnessCardParent);
             newHarness.name = harnessName;
 
-            // Update harness name in the UI
             TextMeshProUGUI tmpText = newHarness.GetComponentInChildren<TextMeshProUGUI>();
-            if (tmpText != null)
+            if (tmpText != null) tmpText.text = harnessName;
+
+            Button harnessButton = newHarness.GetComponent<Button>();
+            if (harnessButton != null)
             {
-                tmpText.text = harnessName;
+                int index = i;
+                harnessButton.onClick.AddListener(() => UpdateCurrentHarness(index));
             }
 
-            Debug.Log("Spawned Harness: " + harnessName);
-            Button HarnessButton = newHarness.GetComponent<Button>();
-            if (HarnessButton != null)
+            Button deleteButton = newHarness.transform.Find("Button")?.GetComponent<Button>();
+            if (deleteButton != null)
             {
-                int index = i; // Capture index for delegate
-                HarnessButton.onClick.AddListener(() => UpdateCurrentHarness(index));
+                int index = i;
+                deleteButton.onClick.AddListener(() => DeleteLastHarness(index));
             }
         }
     }
@@ -250,13 +261,6 @@ public class List : MonoBehaviour
         ScrollCable.SetActive(true);
         cableProperties.SetActive(false);
 
-        if (ProjectCard == null || CableCardParent == null || cablingScript == null)
-        {
-            Debug.LogError("Missing references! Assign Project Prefab, Content Parent, and Cabling Script.");
-            return;
-        }
-
-        // Clear previous harnesses to avoid duplication
         foreach (Transform child in CableCardParent)
         {
             Destroy(child.gameObject);
@@ -266,76 +270,32 @@ public class List : MonoBehaviour
 
         for (int i = 0; i < cableCount; i++)
         {
-            string cableName = cablingScript.Projects.Project[currentProject].Harness[currentHarness].Cable[i].CableName; ;
-
-            // Instantiate harness UI
+            string cableName = cablingScript.Projects.Project[currentProject].Harness[currentHarness].Cable[i].CableName;
             GameObject newCable = Instantiate(ProjectCard, CableCardParent);
             newCable.name = cableName;
 
-            // Update harness name in the UI
             TextMeshProUGUI tmpText = newCable.GetComponentInChildren<TextMeshProUGUI>();
-            if (tmpText != null)
+            if (tmpText != null) tmpText.text = cableName;
+
+            Button cableButton = newCable.GetComponent<Button>();
+            if (cableButton != null)
             {
-                tmpText.text = cableName;
+                int index = i;
+                cableButton.onClick.AddListener(() => UpdateCurrentCable(index));
             }
 
-            Debug.Log("Spawned Harness: " + cableName);
-
-            Button CableButton = newCable.GetComponent<Button>();
-            if (CableButton != null)
+            Button deleteButton = newCable.transform.Find("Button")?.GetComponent<Button>();
+            if (deleteButton != null)
             {
-                int index = i; // Capture index for delegate
-                CableButton.onClick.AddListener(() => UpdateCurrentCable(index));
+                int index = i;
+                deleteButton.onClick.AddListener(() => DeleteLastCable(index));
             }
-
         }
     }
 
     private void UpdateCurrentCable(int x)
     {
         currentCable = x;
-        SpawnCablProperties();
-    }
-
-    public void SpawnCablProperties()
-    {
-        ScrollProject.SetActive(false);
-        ScrollHarness.SetActive(false);
-        ScrollCable.SetActive(false);
-        cableProperties.SetActive(true);
-
-        if (CablePropertiescard  == null || cablePropertiesParent == null || cablingScript == null)
-        {
-            Debug.LogError("Missing references! Assign Project Prefab, Content Parent, and Cabling Script.");
-            return;
-        }
-
-        // Clear previous harnesses to avoid duplication
-        foreach (Transform child in cablePropertiesParent)
-        {
-            Destroy(child.gameObject);
-        }
-
-        int cablePropertiesCount = cablingScript.Projects.Project[currentProject].Harness[currentHarness].Cable[currentCable].Node.Length;
-
-        for (int i = 0; i < cablePropertiesCount; i++)
-        {
-            string NodeName = cablingScript.Projects.Project[currentProject].Harness[currentHarness].Cable[currentCable].Node[i].NodeName;
-
-            // Instantiate cable properties UI
-            GameObject newCableProperties = Instantiate(CablePropertiescard, cablePropertiesParent);
-            newCableProperties.name = NodeName;
-
-            // Get the TextMeshProUGUI component from the instantiated object
-            TextMeshProUGUI tmpText = newCableProperties.GetComponentInChildren<TextMeshProUGUI>();
-            if (tmpText != null)
-            {
-                tmpText.text = NodeName;
-            }
-
-            Debug.Log("Spawned Cable Property: " + NodeName);
-
-
-        }
+        SpawnCable();
     }
 }
