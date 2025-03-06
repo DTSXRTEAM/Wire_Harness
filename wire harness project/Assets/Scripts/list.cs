@@ -22,7 +22,9 @@ public class List : MonoBehaviour
     public Transform cablePropertiesParent;
 
     public Cabling cablingScript;
-   
+    public int highestProjectIndex = 0;
+    public int highestHarnessIndex = 0;
+    public int highestCableIndex = 0;
 
 
     void Start()
@@ -32,25 +34,26 @@ public class List : MonoBehaviour
 
     public void AddNewProject()
     {
-        // Ensure the Projects array is initialized
         if (cablingScript.Projects.Project == null)
         {
             cablingScript.Projects.Project = new Project[0];
         }
 
-        // Create a new project with an empty harness list
-        Project newProject = new Project();
-        newProject.ProjectName = "New Project " + (cablingScript.Projects.Project.Length + 1);
-        newProject.Harness = new Harness[0]; // Initialize the Harness array
+        highestProjectIndex++; // Always increment
 
-        // Add new project to the array
+        Project newProject = new Project
+        {
+            ProjectName = "New Project " + highestProjectIndex,
+            Harness = new Harness[0]
+        };
+
         List<Project> projectList = new List<Project>(cablingScript.Projects.Project);
         projectList.Add(newProject);
         cablingScript.Projects.Project = projectList.ToArray();
 
-        // Update UI
         SpawnProjects();
     }
+
 
     public void AddNewHarness()
     {
@@ -63,9 +66,11 @@ public class List : MonoBehaviour
             selectedProject.Harness = new Harness[0];
         }
 
+        highestHarnessIndex++;
+
         Harness newHarness = new Harness
         {
-            HarnessName = "New Harness " + (selectedProject.Harness.Length + 1),
+            HarnessName = "New Harness " + highestHarnessIndex,
             Cable = new Cable[0]
         };
 
@@ -76,15 +81,18 @@ public class List : MonoBehaviour
         SpawnHarness();
     }
 
+
     public void AddNewCable()
     {
         if (cablingScript.Projects.Project.Length == 0) return;
 
         Harness selectedHarness = cablingScript.Projects.Project[currentProject].Harness[currentHarness];
 
+        highestCableIndex++;
+
         Cable newCable = new Cable
         {
-            CableName = "New Cable " + (selectedHarness.Cable.Length + 1)
+            CableName = "New Cable " + highestCableIndex
         };
 
         List<Cable> cableList = new List<Cable>(selectedHarness.Cable);
@@ -94,28 +102,20 @@ public class List : MonoBehaviour
         SpawnCable();
     }
 
+
     public void DeleteLastProject(int X)
     {
-        Debug.Log("delete project " + X);
+        if (cablingScript.Projects.Project == null || cablingScript.Projects.Project.Length == 0) return;
 
-        if (cablingScript.Projects.Project == null || cablingScript.Projects.Project.Length == 0)
-        {
-            Debug.LogWarning("No projects to delete.");
-            return;
-        }
-
-        // Convert array to a list for easy removal
         List<Project> projectList = new List<Project>(cablingScript.Projects.Project);
-
-        // Remove the last project
         projectList.RemoveAt(X);
-
-        // Convert back to an array
         cablingScript.Projects.Project = projectList.ToArray();
 
-        // Update UI
+        highestProjectIndex = projectList.Count > 0 ? projectList.Max(p => int.Parse(p.ProjectName.Split(' ')[2])) : 0;
+
         SpawnProjects();
     }
+
     public void DeleteLastHarness(int X)
     {
         if (cablingScript.Projects.Project[currentProject].Harness.Length == 0) return;
@@ -145,63 +145,38 @@ public class List : MonoBehaviour
         ScrollCable.SetActive(false);
         cableProperties.SetActive(false);
 
-        if (ProjectCard == null || ProjectCardParent == null || cablingScript == null)
-        {
-            Debug.LogError("Missing references! Assign Project Prefab, Content Parent, and Cabling Script.");
-            return;
-        }
-
-        // Clear previous projects to avoid duplicates
         foreach (Transform child in ProjectCardParent)
         {
             Destroy(child.gameObject);
         }
 
         int projectCount = cablingScript.Projects.Project.Length;
+        highestProjectIndex = projectCount > 0 ? cablingScript.Projects.Project.Max(p => int.Parse(p.ProjectName.Split(' ')[2])) : 0;
 
         for (int i = 0; i < projectCount; i++)
         {
             string projectName = cablingScript.Projects.Project[i].ProjectName;
-
-            // Instantiate the prefab
             GameObject newProject = Instantiate(ProjectCard, ProjectCardParent);
-            newProject.name = projectName; // Assign unique name
+            newProject.name = projectName;
 
-            // Find and update the text
             TextMeshProUGUI tmpText = newProject.GetComponentInChildren<TextMeshProUGUI>();
-            if (tmpText != null)
-            {
-                tmpText.text = projectName;
-            }
+            if (tmpText != null) tmpText.text = projectName;
 
-            // Assign button click dynamically
             Button projectButton = newProject.GetComponent<Button>();
-
-
             if (projectButton != null)
             {
-                int currentindex = i;
-                Debug.Log("project" + projectName);
-                projectButton.onClick.AddListener(() => UpdateCurrentProject(currentindex));
+                int index = i;
+                projectButton.onClick.AddListener(() => UpdateCurrentProject(index));
             }
 
-            Transform Deletbutton = projectButton.gameObject.transform.Find("Button");
-
-            //GameObject Deletbutton = GameObject.Find("Button");
-
-            Button deleteButton = Deletbutton.gameObject.GetComponent<Button>();
-
+            Button deleteButton = newProject.transform.Find("Button")?.GetComponent<Button>();
             if (deleteButton != null)
             {
-                int currentindex = i;
-                //Debug.Log("project" + projectName);
-                deleteButton.onClick.AddListener(() => DeleteLastProject(currentindex));
+                int index = i;
+                deleteButton.onClick.AddListener(() => DeleteLastProject(index));
             }
-
         }
     }
-
-
 
     public void UpdateCurrentProject(int x)
     {
