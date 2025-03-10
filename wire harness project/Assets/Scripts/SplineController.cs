@@ -1,23 +1,43 @@
 using SplineMesh;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+
 
 public class SplineController : MonoBehaviour
 {
-    public Spline spline;
+    public GameObject[] nodeSpheres; // Assign your sphere prefab in Inspector
+    public Spline spline; // Assign the spline component in Inspector
 
-    public GameObject nodessphers;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public void Start()
     {
         
+
     }
 
-    // Update is called once per frame
-    void Update()
+
+    private void Update()
     {
-        spline.nodes[0].Position = nodessphers.transform.position;
+
+        if (nodeSpheres.Length < spline.nodes.Count)
+        {
+            spline.RemoveNode(spline.nodes[spline.nodes.Count - 1]);
+            return;
+        }
 
         
+
+           if(nodeSpheres.Length > spline.nodes.Count)
+            {
+                SplineNode newnode = new SplineNode(spline.nodes[spline.nodes.Count -1].Position, spline.nodes[spline.nodes.Count-1].Direction);
+                spline.AddNode(newnode);
+            return;
+            }
+
+
+        for (int i = 0; i < nodeSpheres.Length; i++)
+        {
+            spline.nodes[i].Position = nodeSpheres[i].transform.position;
+        }
     }
 }
