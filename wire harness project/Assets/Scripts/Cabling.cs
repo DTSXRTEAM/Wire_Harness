@@ -6,28 +6,32 @@ using UnityEngine;
 [System.Serializable]
 public class Projects
 {
-    public Project[] Project;
+    //public Project[] Project;
+    public List<Project> Project;
 }
 
 [System.Serializable]
 public class Project
 {
     public string ProjectName;
-    public Harness[] Harness;
+    //public Harness[] Harness;
+    public List<Harness> Harness;
 }
 
 [System.Serializable]
 public class Harness
 {
     public string HarnessName;
-    public Cable[] Cable;
+    //public Cable[] Cable;
+    public List<Cable> Cable;
 }
 
 [System.Serializable]
 public class Cable
 {
     public string CableName;
-    public Node[] Node;
+    //public Node[] Node;
+    public List<Node> Node;
 }
 
 [System.Serializable]

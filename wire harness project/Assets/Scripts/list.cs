@@ -36,7 +36,7 @@ public class List : MonoBehaviour
     {
         if (cablingScript.Projects.Project == null)
         {
-            cablingScript.Projects.Project = new Project[0];
+            cablingScript.Projects.Project = new List<Project>();
         }
 
         highestProjectIndex++; // Always increment
@@ -44,12 +44,10 @@ public class List : MonoBehaviour
         Project newProject = new Project
         {
             ProjectName = "New Project " + highestProjectIndex,
-            Harness = new Harness[0]
+            Harness = new List<Harness>()
         };
 
-        List<Project> projectList = new List<Project>(cablingScript.Projects.Project);
-        projectList.Add(newProject);
-        cablingScript.Projects.Project = projectList.ToArray();
+        cablingScript.Projects.Project.Add(newProject);
 
         SpawnProjects();
     }
@@ -57,34 +55,26 @@ public class List : MonoBehaviour
 
     public void AddNewHarness()
     {
-        if (cablingScript.Projects.Project == null || cablingScript.Projects.Project.Length == 0) return;
+        if (cablingScript.Projects.Project == null || cablingScript.Projects.Project.Count == 0) return;
 
         Project selectedProject = cablingScript.Projects.Project[currentProject];
-
-        if (selectedProject.Harness == null)
-        {
-            selectedProject.Harness = new Harness[0];
-        }
 
         highestHarnessIndex++;
 
         Harness newHarness = new Harness
         {
             HarnessName = "New Harness " + highestHarnessIndex,
-            Cable = new Cable[0]
+            Cable = new List<Cable>()
         };
 
-        List<Harness> harnessList = new List<Harness>(selectedProject.Harness);
-        harnessList.Add(newHarness);
-        selectedProject.Harness = harnessList.ToArray();
-
+        selectedProject.Harness.Add(newHarness);
         SpawnHarness();
     }
 
 
     public void AddNewCable()
     {
-        if (cablingScript.Projects.Project.Length == 0) return;
+        if (cablingScript.Projects.Project.Count == 0) return;
 
         Harness selectedHarness = cablingScript.Projects.Project[currentProject].Harness[currentHarness];
 
@@ -95,46 +85,30 @@ public class List : MonoBehaviour
             CableName = "New Cable " + highestCableIndex
         };
 
-        List<Cable> cableList = new List<Cable>(selectedHarness.Cable);
-        cableList.Add(newCable);
-        selectedHarness.Cable = cableList.ToArray();
-
+        selectedHarness.Cable.Add(newCable);
         SpawnCable();
     }
 
 
-    public void DeleteLastProject(int X)
+    public void DeleteLastProject(int index)
     {
-        if (cablingScript.Projects.Project == null || cablingScript.Projects.Project.Length == 0) return;
-
-        List<Project> projectList = new List<Project>(cablingScript.Projects.Project);
-        projectList.RemoveAt(X);
-        cablingScript.Projects.Project = projectList.ToArray();
-
-        highestProjectIndex = projectList.Count > 0 ? projectList.Max(p => int.Parse(p.ProjectName.Split(' ')[2])) : 0;
-
+        if (cablingScript.Projects.Project.Count == 0) return;
+        cablingScript.Projects.Project.RemoveAt(index);
+        highestProjectIndex = cablingScript.Projects.Project.Count;
         SpawnProjects();
     }
 
-    public void DeleteLastHarness(int X)
+    public void DeleteLastHarness(int index)
     {
-        if (cablingScript.Projects.Project[currentProject].Harness.Length == 0) return;
-
-        List<Harness> harnessList = new List<Harness>(cablingScript.Projects.Project[currentProject].Harness);
-        harnessList.RemoveAt(X);
-        cablingScript.Projects.Project[currentProject].Harness = harnessList.ToArray();
-
+        if (cablingScript.Projects.Project[currentProject].Harness.Count == 0) return;
+        cablingScript.Projects.Project[currentProject].Harness.RemoveAt(index);
         SpawnHarness();
     }
 
-    public void DeleteLastCable(int X)
+    public void DeleteLastCable(int index)
     {
-        if (cablingScript.Projects.Project[currentProject].Harness[currentHarness].Cable.Length == 0) return;
-
-        List<Cable> cableList = new List<Cable>(cablingScript.Projects.Project[currentProject].Harness[currentHarness].Cable);
-        cableList.RemoveAt(X);
-        cablingScript.Projects.Project[currentProject].Harness[currentHarness].Cable = cableList.ToArray();
-
+        if (cablingScript.Projects.Project[currentProject].Harness[currentHarness].Cable.Count == 0) return;
+        cablingScript.Projects.Project[currentProject].Harness[currentHarness].Cable.RemoveAt(index);
         SpawnCable();
     }
 
@@ -150,10 +124,7 @@ public class List : MonoBehaviour
             Destroy(child.gameObject);
         }
 
-        int projectCount = cablingScript.Projects.Project.Length;
-        highestProjectIndex = projectCount > 0 ? cablingScript.Projects.Project.Max(p => int.Parse(p.ProjectName.Split(' ')[2])) : 0;
-
-        for (int i = 0; i < projectCount; i++)
+        for (int i = 0; i < cablingScript.Projects.Project.Count; i++)
         {
             string projectName = cablingScript.Projects.Project[i].ProjectName;
             GameObject newProject = Instantiate(ProjectCard, ProjectCardParent);
@@ -178,9 +149,9 @@ public class List : MonoBehaviour
         }
     }
 
-    public void UpdateCurrentProject(int x)
+    public void UpdateCurrentProject(int index)
     {
-        currentProject = x;
+        currentProject = index;
         SpawnHarness();
     }
 
@@ -196,9 +167,7 @@ public class List : MonoBehaviour
             Destroy(child.gameObject);
         }
 
-        int harnessCount = cablingScript.Projects.Project[currentProject].Harness.Length;
-
-        for (int i = 0; i < harnessCount; i++)
+        for (int i = 0; i < cablingScript.Projects.Project[currentProject].Harness.Count; i++)
         {
             string harnessName = cablingScript.Projects.Project[currentProject].Harness[i].HarnessName;
             GameObject newHarness = Instantiate(ProjectCard, HarnessCardParent);
@@ -223,9 +192,9 @@ public class List : MonoBehaviour
         }
     }
 
-    private void UpdateCurrentHarness(int x)
+    private void UpdateCurrentHarness(int index)
     {
-        currentHarness = x;
+        currentHarness = index;
         SpawnCable();
     }
 
@@ -241,9 +210,7 @@ public class List : MonoBehaviour
             Destroy(child.gameObject);
         }
 
-        int cableCount = cablingScript.Projects.Project[currentProject].Harness[currentHarness].Cable.Length;
-
-        for (int i = 0; i < cableCount; i++)
+        for (int i = 0; i < cablingScript.Projects.Project[currentProject].Harness[currentHarness].Cable.Count; i++)
         {
             string cableName = cablingScript.Projects.Project[currentProject].Harness[currentHarness].Cable[i].CableName;
             GameObject newCable = Instantiate(ProjectCard, CableCardParent);
@@ -258,19 +225,12 @@ public class List : MonoBehaviour
                 int index = i;
                 cableButton.onClick.AddListener(() => UpdateCurrentCable(index));
             }
-
-            Button deleteButton = newCable.transform.Find("Button")?.GetComponent<Button>();
-            if (deleteButton != null)
-            {
-                int index = i;
-                deleteButton.onClick.AddListener(() => DeleteLastCable(index));
-            }
         }
     }
 
-    private void UpdateCurrentCable(int x)
+    private void UpdateCurrentCable(int index)
     {
-        currentCable = x;
+        currentCable = index;
         SpawnCable();
     }
 }

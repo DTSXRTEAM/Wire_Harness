@@ -366,6 +366,9 @@ MonoBehaviour:
   CableCardParent: {fileID: 7130953568547858448}
   cablePropertiesParent: {fileID: 1891550220125565891}
   cablingScript: {fileID: 849394091}
+  highestProjectIndex: 0
+  highestHarnessIndex: 0
+  highestCableIndex: 0
 --- !u!1 &982690730
 GameObject:
   m_ObjectHideFlags: 0
