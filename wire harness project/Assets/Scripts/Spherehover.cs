@@ -3,7 +3,7 @@ using UnityEngine.XR.Interaction.Toolkit;
 using System.Collections;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 
-public class HoverEffect : MonoBehaviour
+public class Spherehover : MonoBehaviour
 {
     private GameObject child1;
     private GameObject child2;
@@ -14,7 +14,8 @@ public class HoverEffect : MonoBehaviour
     private Coroutine disableCoroutine;
     private SplineController splineController;
 
-    void Awake()
+    //public void AddInteractables(int sphereListLocation)
+    public void Awake()
     {
         // Automatically assign first and second children
         if (transform.childCount >= 2)
@@ -54,7 +55,7 @@ public class HoverEffect : MonoBehaviour
         }
 
         // Assign SelectEntered events
-        interactable1.selectEntered.AddListener((args) => splineController.AddSphere());
+        interactable1.selectEntered.AddListener((args) => splineController.AddSphere(0));
         interactable2.selectEntered.AddListener((args) => splineController.RemoveSphere());
 
         // Hide children initially
