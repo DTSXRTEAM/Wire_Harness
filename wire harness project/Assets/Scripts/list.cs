@@ -225,8 +225,14 @@ public class List : MonoBehaviour
                 int index = i;
                 cableButton.onClick.AddListener(() => UpdateCurrentCable(index));
             }
-         
-          
+            Button deleteButton = newCable.transform.Find("Button")?.GetComponent<Button>();
+            if (deleteButton != null)
+            {
+                int index = i;
+                deleteButton.onClick.AddListener(() => DeleteLastCable(index));
+            }
+
+
         }
     }
 
