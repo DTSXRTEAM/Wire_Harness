@@ -32,6 +32,12 @@ public class SplineController : MonoBehaviour
             AddSphere(nodeSpheres.Count);
         }
 
+        if (spline.nodes.Count == 0)
+        {
+            SplineNode firstNode = new SplineNode(transform.position, transform.forward);
+            spline.AddNode(firstNode);
+        }
+
         // If more spheres exist than spline nodes, remove the last node
         else if (nodeSpheres.Count < spline.nodes.Count)
         {
@@ -58,7 +64,7 @@ public class SplineController : MonoBehaviour
             {
                 if (nodeSpheres[i] != null) // Check if the sphere still exists
                 {
-                    spline.nodes[i].Position = nodeSpheres[i].transform.position;
+                    spline.nodes[i].Position = transform.InverseTransformPoint(nodeSpheres[i].transform.position);
                     GameObject currenspher = nodeSpheres[i].gameObject;
                     //currenspher.GetComponent<Spherehover>().AddInteractables(i);
 
@@ -75,7 +81,7 @@ public class SplineController : MonoBehaviour
         // If no spheres exist, place the first one at (0,0,0)
         if (nodeSpheres.Count == 0)
         {
-            position = Vector3.zero;
+            position = spline.nodes.Count > 0 ? spline.nodes[0].Position : transform.position;
             // Instantiate new sphere and add it to the list
             GameObject newSphere = Instantiate(spherePrefab, position, Quaternion.identity, sphereParent);
             nodeSpheres.Add(newSphere);
