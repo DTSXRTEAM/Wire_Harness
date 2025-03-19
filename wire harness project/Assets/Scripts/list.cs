@@ -225,12 +225,23 @@ public class List : MonoBehaviour
                 int index = i;
                 cableButton.onClick.AddListener(() => UpdateCurrentCable(index));
             }
+         
+          
         }
     }
 
     private void UpdateCurrentCable(int index)
     {
         currentCable = index;
-        SpawnCable();
+        SpawnNode();
+    }
+
+    public void SpawnNode()
+    {
+
+        ScrollProject.SetActive(false);
+        ScrollHarness.SetActive(false);
+        ScrollCable.SetActive(false);
+        cableProperties.SetActive(true);
     }
 }
