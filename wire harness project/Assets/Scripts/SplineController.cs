@@ -2,6 +2,8 @@ using SplineMesh;
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
+using UnityEngine.UIElements;
+using System.Data;
 
 public class SplineController : MonoBehaviour
 {
@@ -9,6 +11,7 @@ public class SplineController : MonoBehaviour
     private Spline spline; // Assign the spline component in Inspector
     public GameObject spherePrefab; // Assign the sphere prefab in Inspector
     private Transform sphereParent; // Parent object to hold spheres
+    private GameObject lastCreatedSphere;
 
     private float spacing = 0.2f; // Distance between spheres
 
@@ -18,6 +21,7 @@ public class SplineController : MonoBehaviour
         sphereParent = gameObject.transform;
         spline = gameObject.GetComponent<Spline>();
     }
+
 
     private void Update()
     {
@@ -31,6 +35,7 @@ public class SplineController : MonoBehaviour
         // If more spheres exist than spline nodes, remove the last node
         else if (nodeSpheres.Count < spline.nodes.Count)
         {
+            SplineNode clearNode = spline.nodes[0];
             spline.RemoveNode(spline.nodes[spline.nodes.Count - 1]);
             return;
         }
@@ -90,49 +95,58 @@ public class SplineController : MonoBehaviour
 
             // Instantiate new sphere and add it to the list
             GameObject newSphere = Instantiate(spherePrefab, position, Quaternion.identity, sphereParent);
-            nodeSpheres.Insert(i+1, newSphere);
+            nodeSpheres.Insert(i + 1, newSphere);
         }
 
         UpdateIndexPosition();
     }
+
+
 
     public void UpdateIndexPosition()
     {
         for (int i = 0; i < nodeSpheres.Count; i++)
         {
+
             if (nodeSpheres[i] != null) // Check if the sphere still exists
             {
+
                 GameObject currenspher = nodeSpheres[i].gameObject;
                 currenspher.name = "Sphere " + i;
-                XRSimpleInteractable interactable = currenspher.GetComponent<XRSimpleInteractable>();
 
-                interactable.selectEntered.RemoveAllListeners();
+
+                XRSimpleInteractable addinteractable = currenspher.transform.Find("Add").GetComponent<XRSimpleInteractable>();
+
+                XRSimpleInteractable removeinteractable = currenspher.transform.Find("Remove").GetComponent<XRSimpleInteractable>();
+
+
+                addinteractable.selectEntered.RemoveAllListeners();
+                removeinteractable.selectEntered.RemoveAllListeners();
+
 
                 int curretpose = i;
 
-                interactable.selectEntered.AddListener((args) => AddSphere(curretpose));
+                addinteractable.selectEntered.AddListener((args) => AddSphere(curretpose));
+                removeinteractable.selectEntered.AddListener((args) => RemoveSphere(curretpose));
             }
-        }
 
+        }
     }
 
 
-    public void RemoveSphere()
+
+
+    public void RemoveSphere(int i)
     {
-        // Ensure at least 2 spheres remain
-        if (nodeSpheres.Count > 2)
-        {
-            GameObject lastSphere = nodeSpheres[nodeSpheres.Count - 1];
-            nodeSpheres.RemoveAt(nodeSpheres.Count - 1);
-            Destroy(lastSphere);
-        }
+        if (i < 0 || i >= nodeSpheres.Count)
+            return; // Prevent out-of-range errors
+
+        GameObject sphereToRemove = nodeSpheres[i];
+        nodeSpheres.RemoveAt(i);
+        Destroy(sphereToRemove);
 
         UpdateIndexPosition();
     }
 
-
-    public void printposition(int i)
-    {
-        Debug.Log(i);
-    }
 }
+
