@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine.XR.Interaction.Toolkit.Interactables;
 using UnityEngine.UIElements;
 using System.Data;
+using TMPro;
 
 public class SplineController : MonoBehaviour
 {
@@ -12,6 +13,9 @@ public class SplineController : MonoBehaviour
     public GameObject spherePrefab; // Assign the sphere prefab in Inspector
     private Transform sphereParent; // Parent object to hold spheres
     private GameObject lastCreatedSphere;
+    public GameObject nodeEntryPrefab; // Assign the Node UI prefab in the Inspector
+    public Transform nodeEntryParent; // Assign the UI ScrollView content panel
+    private List<GameObject> nodeEntries = new List<GameObject>(); // Store UI elements
 
     private float spacing = 0.2f; // Distance between spheres
 
@@ -25,6 +29,13 @@ public class SplineController : MonoBehaviour
 
     private void Update()
     {
+        for (int i = 0; i < nodeSpheres.Count; i++)
+        {
+            if (nodeSpheres[i] != null)
+            {
+                UpdateNodeUI(i);
+            }
+        }
 
         // Ensure there are at least 2 spheres
         if (nodeSpheres.Count < 2)
@@ -104,6 +115,10 @@ public class SplineController : MonoBehaviour
             nodeSpheres.Insert(i + 1, newSphere);
         }
 
+        GameObject newEntry = Instantiate(nodeEntryPrefab, nodeEntryParent);
+        nodeEntries.Add(newEntry);
+        UpdateNodeUI(nodeEntries.Count - 1);
+
         UpdateIndexPosition();
     }
 
@@ -134,13 +149,22 @@ public class SplineController : MonoBehaviour
 
                 addinteractable.selectEntered.AddListener((args) => AddSphere(curretpose));
                 removeinteractable.selectEntered.AddListener((args) => RemoveSphere(curretpose));
+
+                UpdateNodeUI(i);
             }
 
         }
     }
 
-
-
+    private void UpdateNodeUI(int index)
+    {
+        if (index < nodeEntries.Count && index < nodeSpheres.Count)
+        {
+            TextMeshProUGUI text = nodeEntries[index].GetComponentInChildren<TextMeshProUGUI>();
+            Vector3 pos = nodeSpheres[index].transform.position;
+            text.text = $"Node {index}: X={pos.x:F2}, Y={pos.y:F2}, Z={pos.z:F2}";
+        }
+    }
 
     public void RemoveSphere(int i)
     {
@@ -150,6 +174,9 @@ public class SplineController : MonoBehaviour
         GameObject sphereToRemove = nodeSpheres[i];
         nodeSpheres.RemoveAt(i);
         Destroy(sphereToRemove);
+
+        Destroy(nodeEntries[i]); // Remove corresponding UI entry
+        nodeEntries.RemoveAt(i);
 
         UpdateIndexPosition();
     }
