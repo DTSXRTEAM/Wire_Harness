@@ -162,7 +162,7 @@ public class SplineController : MonoBehaviour
         {
             TextMeshProUGUI text = nodeEntries[index].GetComponentInChildren<TextMeshProUGUI>();
             Vector3 pos = nodeSpheres[index].transform.position;
-            text.text = $"Node {index}: X={pos.x:F2}, Y={pos.y:F2}, Z={pos.z:F2}";
+            text.text = $"Node {index}:              X  =   {pos.x:F2},       Y  =   {pos.y:F2},       Z  =  {pos.z:F2}";
         }
     }
 
