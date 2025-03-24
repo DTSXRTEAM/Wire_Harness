@@ -28,7 +28,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 760774971144643691}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -49,33 +49,33 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nodes:
-  - position: {x: 1.6234218, y: 1.4813004, z: 1.6108451}
-    direction: {x: 1.6531864, y: 1.5252639, z: 1.6331968}
+  - position: {x: 1.6234218, y: 1.4813004, z: 0.1936326}
+    direction: {x: 1.6531864, y: 1.5252639, z: 0.42856628}
     up: {x: 0, y: 1, z: 0}
     scale: {x: 1, y: 1}
     roll: 0
   - position: {x: 1.8218528, y: 1.7743908, z: 1.7598569}
-    direction: {x: 1.8516175, y: 1.8183544, z: 1.7822087}
+    direction: {x: 1.8516175, y: 1.8183544, z: 1.9947906}
     up: {x: 0, y: 1, z: 0}
     scale: {x: 1, y: 1}
     roll: 0
   curves:
   - n1:
-      position: {x: 1.6234218, y: 1.4813004, z: 1.6108451}
-      direction: {x: 1.6531864, y: 1.5252639, z: 1.6331968}
+      position: {x: 1.6234218, y: 1.4813004, z: 0.1936326}
+      direction: {x: 1.6531864, y: 1.5252639, z: 0.42856628}
       up: {x: 0, y: 1, z: 0}
       scale: {x: 1, y: 1}
       roll: 0
     n2:
       position: {x: 1.8218528, y: 1.7743908, z: 1.7598569}
-      direction: {x: 1.8516175, y: 1.8183544, z: 1.7822087}
+      direction: {x: 1.8516175, y: 1.8183544, z: 1.9947906}
       up: {x: 0, y: 1, z: 0}
       scale: {x: 1, y: 1}
       roll: 0
     Changed:
       m_PersistentCalls:
         m_Calls: []
-  Length: 0.38403308
+  Length: 1.6057196
   isLoop: 0
   CurveChanged:
     m_PersistentCalls:
@@ -130,6 +130,9 @@ MonoBehaviour:
   nodeSpheres: []
   spherePrefab: {fileID: 8517240852931554828, guid: b0ee59ccefb67c244a33abd84e018f2f,
     type: 3}
+  nodeEntryPrefab: {fileID: 955964574903376201, guid: 7c18c30df3bedb947970f63f584bf759,
+    type: 3}
+  nodeEntryParent: {fileID: 0}
 --- !u!1 &7299819071845159925
 GameObject:
   m_ObjectHideFlags: 0

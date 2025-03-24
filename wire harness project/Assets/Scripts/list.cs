@@ -20,6 +20,7 @@ public class List : MonoBehaviour
     public Transform HarnessCardParent;
     public Transform CableCardParent;
     public Transform cablePropertiesParent;
+    public GameObject cablePrefab;
 
     public Cabling cablingScript;
     public int highestProjectIndex = 0;
@@ -86,6 +87,7 @@ public class List : MonoBehaviour
         };
 
         selectedHarness.Cable.Add(newCable);
+        SpawnCablePrefab();
         SpawnCable();
     }
 
@@ -235,7 +237,13 @@ public class List : MonoBehaviour
 
         }
     }
-
+    public void SpawnCablePrefab()
+    {
+        if (cablePrefab != null)
+        {
+            Instantiate(cablePrefab);
+        }
+    }
     private void UpdateCurrentCable(int index)
     {
         currentCable = index;

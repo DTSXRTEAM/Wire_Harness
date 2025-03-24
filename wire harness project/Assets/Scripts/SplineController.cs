@@ -8,13 +8,14 @@ using TMPro;
 
 public class SplineController : MonoBehaviour
 {
+
+    private List listScript;
     public List<GameObject> nodeSpheres = new List<GameObject>(); // Store spheres dynamically
     private Spline spline; // Assign the spline component in Inspector
     public GameObject spherePrefab; // Assign the sphere prefab in Inspector
     private Transform sphereParent; // Parent object to hold spheres
     private GameObject lastCreatedSphere;
-    public GameObject nodeEntryPrefab; // Assign the Node UI prefab in the Inspector
-    public Transform nodeEntryParent; // Assign the UI ScrollView content panel
+    public GameObject nodeEntryPrefab; // Assign the Node UI prefab in the Inspect
     private List<GameObject> nodeEntries = new List<GameObject>(); // Store UI elements
 
     private float spacing = 0.2f; // Distance between spheres
@@ -24,6 +25,9 @@ public class SplineController : MonoBehaviour
     {
         sphereParent = gameObject.transform;
         spline = gameObject.GetComponent<Spline>();
+
+        listScript = FindObjectOfType<List>();
+
     }
 
 
@@ -115,7 +119,7 @@ public class SplineController : MonoBehaviour
             nodeSpheres.Insert(i + 1, newSphere);
         }
 
-        GameObject newEntry = Instantiate(nodeEntryPrefab, nodeEntryParent);
+        GameObject newEntry = Instantiate(nodeEntryPrefab);
         nodeEntries.Add(newEntry);
         UpdateNodeUI(nodeEntries.Count - 1);
 
@@ -155,14 +159,18 @@ public class SplineController : MonoBehaviour
 
         }
     }
-
     private void UpdateNodeUI(int index)
     {
         if (index < nodeEntries.Count && index < nodeSpheres.Count)
         {
             TextMeshProUGUI text = nodeEntries[index].GetComponentInChildren<TextMeshProUGUI>();
             Vector3 pos = nodeSpheres[index].transform.position;
-            text.text = $"Node {index}:              X  =   {pos.x:F2},       Y  =   {pos.y:F2},       Z  =  {pos.z:F2}";
+            text.text = $"Node {index}: X = {pos.x:F2}, Y = {pos.y:F2}, Z = {pos.z:F2}";
+
+            if (listScript != null)
+            {
+                nodeEntries[index].transform.SetParent(listScript.cablePropertiesParent, false);
+            }
         }
     }
 
