@@ -9,6 +9,7 @@ public class List : MonoBehaviour
     public int currentProject;
     public int currentHarness;
     public int currentCable;
+    private List<GameObject> spawnedCables = new List<GameObject>(); 
 
     public GameObject ScrollProject;
     public GameObject ScrollHarness;
@@ -21,6 +22,7 @@ public class List : MonoBehaviour
     public Transform CableCardParent;
     public Transform cablePropertiesParent;
     public GameObject cablePrefab;
+    private GameObject spawnedCable;
 
     public Cabling cablingScript;
     public int highestProjectIndex = 0;
@@ -112,6 +114,7 @@ public class List : MonoBehaviour
         if (cablingScript.Projects.Project[currentProject].Harness[currentHarness].Cable.Count == 0) return;
         cablingScript.Projects.Project[currentProject].Harness[currentHarness].Cable.RemoveAt(index);
         SpawnCable();
+        DestroyCablePrefab();
     }
 
     public void SpawnProjects()
@@ -237,14 +240,29 @@ public class List : MonoBehaviour
 
         }
     }
+   
+
     public void SpawnCablePrefab()
     {
         if (cablePrefab != null)
         {
-            Instantiate(cablePrefab);
+            GameObject newCable = Instantiate(cablePrefab);
+            spawnedCables.Add(newCable); // Store each spawned prefab in the list
         }
     }
-    private void UpdateCurrentCable(int index)
+
+    public void DestroyCablePrefab()
+    {
+        if (spawnedCables.Count > 0) // Check if there are cables to destroy
+        {
+            GameObject cableToDestroy = spawnedCables[0]; // Get the first spawned cable
+            spawnedCables.RemoveAt(0); // Remove from list before destroying
+            Destroy(cableToDestroy); // Destroy the cable
+        }
+    }
+
+
+private void UpdateCurrentCable(int index)
     {
         currentCable = index;
         SpawnNode();
