@@ -20,6 +20,7 @@ public class SplineController : MonoBehaviour
 
     private float spacing = 0.2f; // Distance between spheres
 
+    public static bool isNodeupdate = false;
 
     private void Start()
     {
@@ -27,19 +28,18 @@ public class SplineController : MonoBehaviour
         spline = gameObject.GetComponent<Spline>();
 
         listScript = FindObjectOfType<List>();
-
     }
 
 
     private void Update()
     {
-        for (int i = 0; i < nodeSpheres.Count; i++)
+        /*for (int i = 0; i < nodeSpheres.Count; i++)
         {
             if (nodeSpheres[i] != null)
             {
                 UpdateNodeUI(i);
             }
-        }
+        }*/
 
         // Ensure there are at least 2 spheres
         if (nodeSpheres.Count < 2)
@@ -87,6 +87,16 @@ public class SplineController : MonoBehaviour
                 }
             }
         }
+
+        if (isNodeupdate) // Check if the flag is true
+        {
+            for (int i = 0; i < nodeEntries.Count; i++) // Iterate through nodes
+            {
+                UpdateNodeUI(i);
+            }
+
+            isNodeupdate = false; // Reset flag after updating
+        }
     }
 
     public void AddSphere(int i)
@@ -121,7 +131,7 @@ public class SplineController : MonoBehaviour
 
         GameObject newEntry = Instantiate(nodeEntryPrefab);
         nodeEntries.Add(newEntry);
-        UpdateNodeUI(nodeEntries.Count - 1);
+        //UpdateNodeUI(nodeEntries.Count - 1);
 
         UpdateIndexPosition();
     }
@@ -154,11 +164,12 @@ public class SplineController : MonoBehaviour
                 addinteractable.selectEntered.AddListener((args) => AddSphere(curretpose));
                 removeinteractable.selectEntered.AddListener((args) => RemoveSphere(curretpose));
 
-                UpdateNodeUI(i);
+                //UpdateNodeUI(i);
             }
 
         }
     }
+
     private void UpdateNodeUI(int index)
     {
         if (index < nodeEntries.Count && index < nodeSpheres.Count)
@@ -169,7 +180,7 @@ public class SplineController : MonoBehaviour
 
             if (listScript != null)
             {
-                nodeEntries[index].transform.SetParent(listScript.cablePropertiesParent, false);
+                nodeEntries[index].transform.SetParent(listScript.nodeCardParent, false);
             }
         }
     }

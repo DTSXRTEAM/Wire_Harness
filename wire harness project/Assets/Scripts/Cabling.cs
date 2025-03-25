@@ -30,6 +30,7 @@ public class Harness
 public class Cable
 {
     public string CableName;
+    public GameObject CableGameObject;
     //public Node[] Node;
     public List<Node> Node;
 }

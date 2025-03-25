@@ -359,12 +359,11 @@ MonoBehaviour:
   cableProperties: {fileID: 1873182182334860027}
   ProjectCard: {fileID: 955964574903376201, guid: 3d8f9150c494b5a498d7a083352d71a8,
     type: 3}
-  CablePropertiescard: {fileID: 955964574903376201, guid: ebdf8f757c7316d4895dacca06a0df14,
-    type: 3}
+  nodeCard: {fileID: 955964574903376201, guid: 7c18c30df3bedb947970f63f584bf759, type: 3}
   ProjectCardParent: {fileID: 8323089930715247420}
   HarnessCardParent: {fileID: 995439471690354880}
   CableCardParent: {fileID: 7130953568547858448}
-  cablePropertiesParent: {fileID: 1891550220125565891}
+  nodeCardParent: {fileID: 1891550220125565891}
   cablePrefab: {fileID: 760774971144643691, guid: 2fe8cac09f46b4546894d4554b1660c3,
     type: 3}
   cablingScript: {fileID: 849394091}

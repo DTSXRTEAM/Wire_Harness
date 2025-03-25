@@ -9,18 +9,17 @@ public class List : MonoBehaviour
     public int currentProject;
     public int currentHarness;
     public int currentCable;
-    private List<GameObject> spawnedCables = new List<GameObject>(); 
 
     public GameObject ScrollProject;
     public GameObject ScrollHarness;
     public GameObject ScrollCable;
     public GameObject cableProperties;
     public GameObject ProjectCard;
-    public GameObject CablePropertiescard;
+    public GameObject nodeCard;
     public Transform ProjectCardParent;
     public Transform HarnessCardParent;
     public Transform CableCardParent;
-    public Transform cablePropertiesParent;
+    public Transform nodeCardParent;
     public GameObject cablePrefab;
     private GameObject spawnedCable;
 
@@ -89,7 +88,6 @@ public class List : MonoBehaviour
         };
 
         selectedHarness.Cable.Add(newCable);
-        SpawnCablePrefab();
         SpawnCable();
     }
 
@@ -114,7 +112,7 @@ public class List : MonoBehaviour
         if (cablingScript.Projects.Project[currentProject].Harness[currentHarness].Cable.Count == 0) return;
         cablingScript.Projects.Project[currentProject].Harness[currentHarness].Cable.RemoveAt(index);
         SpawnCable();
-        DestroyCablePrefab();
+        //DestroyCablePrefab();
     }
 
     public void SpawnProjects()
@@ -237,21 +235,28 @@ public class List : MonoBehaviour
                 deleteButton.onClick.AddListener(() => DeleteLastCable(index));
             }
 
+            //Spawn cable Prefab
+            if (cablePrefab != null)
+            {
+                GameObject newCableGameobject = Instantiate(cablePrefab);
+                cablingScript.Projects.Project[currentProject].Harness[currentHarness].Cable[i].CableGameObject = newCableGameobject;
+            }
 
         }
+        
     }
    
 
-    public void SpawnCablePrefab()
+/*    public void SpawnCablePrefab()
     {
         if (cablePrefab != null)
         {
             GameObject newCable = Instantiate(cablePrefab);
             spawnedCables.Add(newCable); // Store each spawned prefab in the list
         }
-    }
+    }*/
 
-    public void DestroyCablePrefab()
+/*    public void DestroyCablePrefab()
     {
         if (spawnedCables.Count > 0) // Check if there are cables to destroy
         {
@@ -259,7 +264,7 @@ public class List : MonoBehaviour
             spawnedCables.RemoveAt(0); // Remove from list before destroying
             Destroy(cableToDestroy); // Destroy the cable
         }
-    }
+    }*/
 
 
 private void UpdateCurrentCable(int index)
@@ -270,10 +275,31 @@ private void UpdateCurrentCable(int index)
 
     public void SpawnNode()
     {
+        Debug.Log("spawn nodes");
 
         ScrollProject.SetActive(false);
         ScrollHarness.SetActive(false);
         ScrollCable.SetActive(false);
         cableProperties.SetActive(true);
+
+        foreach (Transform child in nodeCardParent)
+        {
+            Destroy(child.gameObject);
+        }
+
+        for (int i = 0; i < cablingScript.Projects.Project[currentProject].Harness[currentHarness].Cable[currentCable].CableGameObject.GetComponent<SplineController>().nodeSpheres.Count; i++)
+        {
+            //string nodeName = cablingScript.Projects.Project[currentProject].Harness[currentHarness].Cable[currentCable].Node[i].NodeName;
+
+            string nodeName = "Node " + i + ":";
+            
+            GameObject newNode = Instantiate(nodeCard, nodeCardParent);
+            newNode.name = nodeName;
+
+            Transform nodeTransform = cablingScript.Projects.Project[currentProject].Harness[currentHarness].Cable[currentCable].CableGameObject.GetComponent<SplineController>().nodeSpheres[i].transform;
+
+            TextMeshProUGUI tmpText = newNode.GetComponentInChildren<TextMeshProUGUI>();
+            if (tmpText != null) tmpText.text = nodeName + nodeTransform.position;
+        }
     }
 }
