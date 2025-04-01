@@ -370,6 +370,7 @@ MonoBehaviour:
   highestProjectIndex: 0
   highestHarnessIndex: 0
   highestCableIndex: 0
+  nodeTexts: []
 --- !u!1001 &1798772871
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -436,7 +437,7 @@ PrefabInstance:
     - target: {fileID: 6598815579406187037, guid: 18ddb545287c546e19cc77dc9fbb2189,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

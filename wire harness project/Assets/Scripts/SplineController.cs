@@ -86,7 +86,8 @@ public class SplineController : MonoBehaviour
             {
                 if (nodeSpheres[i] != null)
                 {
-                    listScript.nodeTexts[i].text = $"Node {i}: {nodeSpheres[i].transform.position}";
+                    Vector3 pos = nodeSpheres[i].transform.position;
+                    listScript.nodeTexts[i].text = $"Node {i}  :   X   =   {pos.x:F2},    Y   =   {pos.y:F2},    Z   =   {pos.z:F2}";
                 }
             }
         }
@@ -182,7 +183,7 @@ public class SplineController : MonoBehaviour
     public void RemoveSphere(int i)
     {
         if (i < 0 || i >= nodeSpheres.Count)
-            return; // Prevent out-of-range errors
+        return; // Prevent out-of-range errors
 
         GameObject sphereToRemove = nodeSpheres[i];
         nodeSpheres.RemoveAt(i);
