@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
@@ -27,7 +27,7 @@ public class List : MonoBehaviour
     public int highestProjectIndex = 0;
     public int highestHarnessIndex = 0;
     public int highestCableIndex = 0;
-
+    public List<TextMeshProUGUI> nodeTexts = new List<TextMeshProUGUI>(); // Store UI text references
 
     void Start()
     {
@@ -201,6 +201,50 @@ public class List : MonoBehaviour
         SpawnCable();
     }
 
+    //public void SpawnCable()
+    //{
+    //    ScrollProject.SetActive(false);
+    //    ScrollHarness.SetActive(false);
+    //    ScrollCable.SetActive(true);
+    //    cableProperties.SetActive(false);
+
+    //    foreach (Transform child in CableCardParent)
+    //    {
+    //        Destroy(child.gameObject);
+    //    }
+
+    //    for (int i = 0; i < cablingScript.Projects.Project[currentProject].Harness[currentHarness].Cable.Count; i++)
+    //    {
+    //        string cableName = cablingScript.Projects.Project[currentProject].Harness[currentHarness].Cable[i].CableName;
+    //        GameObject newCable = Instantiate(ProjectCard, CableCardParent);
+    //        newCable.name = cableName;
+
+    //        TextMeshProUGUI tmpText = newCable.GetComponentInChildren<TextMeshProUGUI>();
+    //        if (tmpText != null) tmpText.text = cableName;
+
+    //        Button cableButton = newCable.GetComponent<Button>();
+    //        if (cableButton != null)
+    //        {
+    //            int index = i;
+    //            cableButton.onClick.AddListener(() => UpdateCurrentCable(index));
+    //        }
+    //        Button deleteButton = newCable.transform.Find("Button")?.GetComponent<Button>();
+    //        if (deleteButton != null)
+    //        {
+    //            int index = i;
+    //            deleteButton.onClick.AddListener(() => DeleteLastCable(index));
+    //        }
+
+    //        //Spawn cable Prefab
+    //        if (cablePrefab != null)
+    //        {
+    //            GameObject newCableGameobject = Instantiate(cablePrefab);
+    //            cablingScript.Projects.Project[currentProject].Harness[currentHarness].Cable[i].CableGameObject = newCableGameobject;
+    //        }
+
+    //    }
+
+
     public void SpawnCable()
     {
         ScrollProject.SetActive(false);
@@ -208,6 +252,7 @@ public class List : MonoBehaviour
         ScrollCable.SetActive(true);
         cableProperties.SetActive(false);
 
+        // Clear only UI elements, but don't respawn cables unnecessarily
         foreach (Transform child in CableCardParent)
         {
             Destroy(child.gameObject);
@@ -235,17 +280,73 @@ public class List : MonoBehaviour
                 deleteButton.onClick.AddListener(() => DeleteLastCable(index));
             }
 
-            //Spawn cable Prefab
-            if (cablePrefab != null)
+         
+            if (cablingScript.Projects.Project[currentProject].Harness[currentHarness].Cable[i].CableGameObject == null)
             {
-                GameObject newCableGameobject = Instantiate(cablePrefab);
-                cablingScript.Projects.Project[currentProject].Harness[currentHarness].Cable[i].CableGameObject = newCableGameobject;
+                if (cablePrefab != null)
+                {
+                    GameObject newCableGameobject = Instantiate(cablePrefab);
+                    cablingScript.Projects.Project[currentProject].Harness[currentHarness].Cable[i].CableGameObject = newCableGameobject;
+                }
+            }
+        }
+    }
+
+
+
+public void BackButton()
+    {
+        ScrollProject.SetActive(false);
+        ScrollHarness.SetActive(false);
+        ScrollCable.SetActive(true);
+        cableProperties.SetActive(false);
+    }
+   private void UpdateCurrentCable(int index)
+    {
+        currentCable = index;
+        SpawnNode();
+    }
+
+
+  
+
+    public void SpawnNode()
+    {
+        Debug.Log("spawn nodes");
+
+        ScrollProject.SetActive(false);
+        ScrollHarness.SetActive(false);
+        ScrollCable.SetActive(false);
+        cableProperties.SetActive(true);
+
+        foreach (Transform child in nodeCardParent)
+        {
+            Destroy(child.gameObject);
+        }
+
+        nodeTexts.Clear(); // Clear previous text references
+
+        var splineController = cablingScript.Projects.Project[currentProject].Harness[currentHarness].Cable[currentCable] .CableGameObject.GetComponent<SplineController>();
+
+        for (int i = 0; i < splineController.nodeSpheres.Count; i++)
+        {
+            string nodeName = "Node " + i + ":";
+
+            GameObject newNode = Instantiate(nodeCard, nodeCardParent);
+            newNode.name = nodeName;
+
+            TextMeshProUGUI tmpText = newNode.GetComponentInChildren<TextMeshProUGUI>();
+            if (tmpText != null)
+            {
+                nodeTexts.Add(tmpText); // Store reference
+                tmpText.text = nodeName + splineController.nodeSpheres[i].transform.position;
             }
 
         }
-        
     }
-   
+
+
+}
 
 /*    public void SpawnCablePrefab()
     {
@@ -265,41 +366,3 @@ public class List : MonoBehaviour
             Destroy(cableToDestroy); // Destroy the cable
         }
     }*/
-
-
-private void UpdateCurrentCable(int index)
-    {
-        currentCable = index;
-        SpawnNode();
-    }
-
-    public void SpawnNode()
-    {
-        Debug.Log("spawn nodes");
-
-        ScrollProject.SetActive(false);
-        ScrollHarness.SetActive(false);
-        ScrollCable.SetActive(false);
-        cableProperties.SetActive(true);
-
-        foreach (Transform child in nodeCardParent)
-        {
-            Destroy(child.gameObject);
-        }
-
-        for (int i = 0; i < cablingScript.Projects.Project[currentProject].Harness[currentHarness].Cable[currentCable].CableGameObject.GetComponent<SplineController>().nodeSpheres.Count; i++)
-        {
-            //string nodeName = cablingScript.Projects.Project[currentProject].Harness[currentHarness].Cable[currentCable].Node[i].NodeName;
-
-            string nodeName = "Node " + i + ":";
-            
-            GameObject newNode = Instantiate(nodeCard, nodeCardParent);
-            newNode.name = nodeName;
-
-            Transform nodeTransform = cablingScript.Projects.Project[currentProject].Harness[currentHarness].Cable[currentCable].CableGameObject.GetComponent<SplineController>().nodeSpheres[i].transform;
-
-            TextMeshProUGUI tmpText = newNode.GetComponentInChildren<TextMeshProUGUI>();
-            if (tmpText != null) tmpText.text = nodeName + nodeTransform.position;
-        }
-    }
-}

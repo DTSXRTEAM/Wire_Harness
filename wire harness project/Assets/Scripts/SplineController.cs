@@ -1,3 +1,4 @@
+
 using SplineMesh;
 using UnityEngine;
 using System.Collections.Generic;
@@ -33,15 +34,6 @@ public class SplineController : MonoBehaviour
 
     private void Update()
     {
-        /*for (int i = 0; i < nodeSpheres.Count; i++)
-        {
-            if (nodeSpheres[i] != null)
-            {
-                UpdateNodeUI(i);
-            }
-        }*/
-
-        // Ensure there are at least 2 spheres
         if (nodeSpheres.Count < 2)
         {
             AddSphere(nodeSpheres.Count);
@@ -52,16 +44,11 @@ public class SplineController : MonoBehaviour
             SplineNode firstNode = new SplineNode(transform.position, transform.forward);
             spline.AddNode(firstNode);
         }
-
-        // If more spheres exist than spline nodes, remove the last node
         else if (nodeSpheres.Count < spline.nodes.Count)
         {
-            SplineNode clearNode = spline.nodes[0];
             spline.RemoveNode(spline.nodes[spline.nodes.Count - 1]);
             return;
         }
-
-        // If more nodes are needed, add one
         else if (nodeSpheres.Count > spline.nodes.Count)
         {
             SplineNode newNode = new SplineNode(
@@ -71,33 +58,40 @@ public class SplineController : MonoBehaviour
             spline.AddNode(newNode);
             return;
         }
-
-        // Update spline to follow sphere positions
         else
         {
             for (int i = 0; i < nodeSpheres.Count; i++)
             {
-                if (nodeSpheres[i] != null) // Check if the sphere still exists
+                if (nodeSpheres[i] != null)
                 {
                     spline.nodes[i].Position = transform.InverseTransformPoint(nodeSpheres[i].transform.position);
-                    GameObject currenspher = nodeSpheres[i].gameObject;
-                    //currenspher.GetComponent<Spherehover>().AddInteractables(i);
-
-                    currenspher.name = "Sphere " + i;
+                    nodeSpheres[i].name = "Sphere " + i;
                 }
             }
         }
 
-        if (isNodeupdate) // Check if the flag is true
+        if (isNodeupdate)
         {
-            for (int i = 0; i < nodeEntries.Count; i++) // Iterate through nodes
+            for (int i = 0; i < nodeEntries.Count; i++)
             {
                 UpdateNodeUI(i);
             }
+            isNodeupdate = false;
+        }
 
-            isNodeupdate = false; // Reset flag after updating
+        // **Update UI text from SpawnNode()**
+        if (listScript != null && listScript.nodeTexts.Count == nodeSpheres.Count)
+        {
+            for (int i = 0; i < nodeSpheres.Count; i++)
+            {
+                if (nodeSpheres[i] != null)
+                {
+                    listScript.nodeTexts[i].text = $"Node {i}: {nodeSpheres[i].transform.position}";
+                }
+            }
         }
     }
+
 
     public void AddSphere(int i)
     {
@@ -131,7 +125,7 @@ public class SplineController : MonoBehaviour
 
         GameObject newEntry = Instantiate(nodeEntryPrefab);
         nodeEntries.Add(newEntry);
-        //UpdateNodeUI(nodeEntries.Count - 1);
+        UpdateNodeUI(nodeEntries.Count - 1);
 
         UpdateIndexPosition();
     }
@@ -164,7 +158,7 @@ public class SplineController : MonoBehaviour
                 addinteractable.selectEntered.AddListener((args) => AddSphere(curretpose));
                 removeinteractable.selectEntered.AddListener((args) => RemoveSphere(curretpose));
 
-                //UpdateNodeUI(i);
+                UpdateNodeUI(i);
             }
 
         }
@@ -201,4 +195,3 @@ public class SplineController : MonoBehaviour
     }
 
 }
-

@@ -39,6 +39,7 @@ public class Cable
 public class Node
 {
     public string NodeName;
+
 }
 public class Cabling : MonoBehaviour
 {
